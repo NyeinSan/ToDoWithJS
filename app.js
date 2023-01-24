@@ -4,6 +4,7 @@ let todoBox = document.querySelector(".todo-Box");
 let filters = document.querySelectorAll(".filters button");
 let deleteCompleteItem = document.getElementById("clearItem");
 let todos = JSON.parse(localStorage.getItem("todo-list"));
+let countItem = document.querySelector("#count");
 
 
 filters.forEach(btn => {
@@ -31,48 +32,46 @@ function showTodoLists(filter) {
           </div>
         </li>`;
       }
-      check.innerText = "Check All";
-      //count(); 
     });
+    checkedAll();
+    countItem.innerText = todos.filter(data => data.status == "active").length
   }
   todoBox.innerHTML = liLists;
 }
 showTodoLists("all");
 
-function count() {
-  countItem = todos.filter(todo => todo.status == "active").length;
-  document.querySelector("#count").innerText = countItem + " " + "items left";
-}
 
 
 check.addEventListener('click', (e) => {
- 
-  var checkboxes = document.querySelectorAll('input[type=checkbox]');
-  var spanChecked = document.querySelector('.checkAlert').nextElementSibling;
-  checkboxes.forEach((checkbox, index) => {
-    console.log( todos[index].status);
-  
-
-    if (checkbox.checked) {
-      
-     checkbox.removeAttribute('checked');
-     checkbox.nextElementSibling.classList.remove("checked");
-      check.innerText = "Check All";
-      
-    }
-    else {
-      checkbox.setAttribute('checked', 'checked');
-      checkbox.nextElementSibling.classList.add("checked");
-      check.innerText = "Uncheck All";
-    }
-    
-  });
+  if (check.innerText == "Check All") {
+    todos = todos.map(todo => {
+      return { name: todo.name, status: "completed" };
+    })
+    checkedAll();
+  } else {
+    todos = todos.map(todo => {
+      return { name: todo.name, status: "active" };
+    })
+    checkedAll();
+  }
   localStorage.setItem("todo-list", JSON.stringify(todos));
-  //showTodoLists();
+  showTodoLists("all");
+
 });
+
+
+function checkedAll() {
+  let todo = todos.filter((todo) => todo.status == "completed");
+  if (todo.length == todos.length || todos.length == 0) {
+    check.innerText = "Uncheck All";
+  } else {
+    check.innerText = "Check All";
+  }
+}
 
 function deleteItem(deleteId) {
   todos.splice(deleteId, 1);
+  checkedAll();
   localStorage.setItem("todo-list", JSON.stringify(todos));
   showTodoLists("all");
 }
@@ -81,30 +80,34 @@ deleteCompleteItem.addEventListener('click', (e) => {
   e.preventDefault();
   todos = todos.filter(todo => todo.status == "active")
   localStorage.setItem('todo-list', JSON.stringify(todos));
-  showTodoLists();
-}) 
-  
+  document.getElementById("completed").classList.remove("active");
+  document.getElementById("all").classList.add("active");
+  showTodoLists("all");
+})
+
 
 function strikeItem(selectItem) {
   let item = selectItem.parentElement.lastElementChild;
   if (selectItem.checked) {
     item.classList.add("checked");
     todos[selectItem.id].status = "completed";
-    
+
   } else {
     item.classList.remove("checked");
     todos[selectItem.id].status = "active";
-    
+
   }
+  countItem.innerText = todos.filter(data => data.status == "active").length
+  checkedAll();
   localStorage.setItem("todo-list", JSON.stringify(todos));
 }
 
 let addBtn = document.getElementById('addTodoList');
 addBtn.addEventListener('click', e => {
-  e.preventDefault(); 
+  e.preventDefault();
   let lists = inputValue.value.trim();
   if (lists) {
-    
+
     if (!todos) {
       todos = [];
     }

@@ -1,22 +1,23 @@
-.card{
+.card {
   width: 500px;
 }
 
-.btn-filter{
+.btn-filter {
   width: 150px;
 }
 
-.btn-handle{
+.btn-handle {
   width: 225px;
 }
-li{
+
+li {
   list-style: none;
 }
 
-.delete-btn{
+.delete-btn {
   padding: 0rem 0.75rem !important;
 }
 
-.listItems label span.checked{
+.listItems label span.checked {
   text-decoration: line-through;
 }
