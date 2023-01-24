@@ -114,6 +114,8 @@ addBtn.addEventListener('click', e => {
     inputValue.value = "";
     let listInfo = { name: lists, status: "active" };
     todos.push(listInfo);
+    document.querySelector("button.active").classList.remove("active");
+    document.getElementById("all").classList.add("active");
     localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodoLists("all");
   }
